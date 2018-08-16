@@ -13,8 +13,5 @@ exports.run = (client, message, args) => {
   } else {
     message.channel.send(`You do not have permission to kick ${kickee}!`);
   }
-<<<<<<< HEAD
-=======
 }
->>>>>>> 0531a6aa219ad38e35bf9af582cde6e523a1c949
 };
