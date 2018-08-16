@@ -13,5 +13,5 @@ if (hasPerms) {
   } else {
     message.channel.send(`You do not have permission to kick ${user}!`);
   }
-};
 }
+};
