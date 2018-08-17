@@ -1,28 +1,16 @@
-exports.run = (message, bot) => {
-  if (!message.mentions.users.first()) return message.channel.send("**Mention a user or multiple users to kick them.**")
-    let ment = message.mentions.users;
-    let text = []
-    ment.forEach(m => {
-        if (!message.guild.member(m).kickable) {
-            message.channel.send("**Something went wrong when kicking:* "+m.username);
-        } else {
-            message.guild.member(m).kick().then(() => {
-                text.push(m.username)
-            }).catch(err => message.channel.send("**Something went wrong when kicking:** "+m.username))
-        }
+exports.run = (client, message, args) => {
+  const discord = require("discord.js");
+  let perms = message.member.permissions;
+  let hasPerms = message.member.hasPermissions("KICK_MEMBERS");
+  let kickee = message.mentions.members.first();
+  let reason = args.slice(1).join(" ");
+  if (hasPerms) {
+    kickee.kick(reason);
+    message.channel.send(`${kickee} has been kicked for ${reason}!`).catch(err => {
+      message.channel.send(`I was unable to kick ${kickee}`);
+      console.error(err);
     });
-    setTimeout(function() {
-        if (text.length === 0) return;
-        message.channel.send(text.join(", ")+" **has been kicked.**", {split:true});
-    }, 1000);
-}
-
-exports.conf = {
-  userPerm:["KICK_MEMBERS"],
-  botPerm:["SEND_MESSAGES", "KICK_MEMBERS"],
-  coolDown:0,
-  dm:true,
-  category:"Moderation",
-  help:"Kick a user.",
-  args:"",
-}
+  } else {
+    message.channel.send(`You do not have permission to kick ${kickee}!`);
+  }
+};
